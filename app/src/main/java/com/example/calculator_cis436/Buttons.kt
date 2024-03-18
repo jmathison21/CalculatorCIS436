@@ -1,15 +1,12 @@
 package com.example.calculator_cis436
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+import com.example.calculator_cis436.databinding.FragmentButtonsBinding
 
 /**
  * A simple [Fragment] subclass.
@@ -17,43 +14,69 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class Buttons : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private lateinit var binding: FragmentButtonsBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+    private lateinit var activityCallback: ButtonListener
+
+    interface ButtonListener {
+        fun onButtonClicked(character: String)
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_buttons, container, false)
+        binding = FragmentButtonsBinding.inflate(inflater, container, false)
+
+        //inner button listeners
+        binding.button0.setOnClickListener {activityCallback.onButtonClicked("0")}
+        binding.button1.setOnClickListener {activityCallback.onButtonClicked("1")}
+        binding.button2.setOnClickListener {activityCallback.onButtonClicked("2")}
+        binding.button3.setOnClickListener {activityCallback.onButtonClicked("3")}
+        binding.button4.setOnClickListener {activityCallback.onButtonClicked("4")}
+        binding.button5.setOnClickListener {activityCallback.onButtonClicked("5")}
+        binding.button6.setOnClickListener {activityCallback.onButtonClicked("6")}
+        binding.button7.setOnClickListener {activityCallback.onButtonClicked("7")}
+        binding.button8.setOnClickListener {activityCallback.onButtonClicked("8")}
+        binding.button9.setOnClickListener {activityCallback.onButtonClicked("9")}
+        binding.buttonDot.setOnClickListener {activityCallback.onButtonClicked(".")}
+        binding.buttonNegative.setOnClickListener {activityCallback.onButtonClicked("+/-")}
+
+        //outer button listeners
+        binding.buttonModulus.setOnClickListener {activityCallback.onButtonClicked("%")}
+        binding.buttonSQRT.setOnClickListener {activityCallback.onButtonClicked("√")}
+        binding.buttonCE.setOnClickListener {activityCallback.onButtonClicked("CE")}
+        binding.buttonClear.setOnClickListener {activityCallback.onButtonClicked("C")}
+        binding.buttonPlus.setOnClickListener {activityCallback.onButtonClicked("+")}
+        binding.buttonMinus.setOnClickListener {activityCallback.onButtonClicked("-")}
+        binding.buttonMultiply.setOnClickListener {activityCallback.onButtonClicked("*")}
+        binding.buttonDivide.setOnClickListener {activityCallback.onButtonClicked("/")}
+        binding.buttonEquals.setOnClickListener {activityCallback.onButtonClicked("=")}
+
+
+
+        return binding.root
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        try {
+            activityCallback = context as ButtonListener
+        }
+        catch(e : ClassCastException) {
+            throw ClassCastException(context.toString() +
+                    " must implement ButtonListener")
+        }
+    }
+
+
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment Buttons.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            Buttons().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+        fun newInstance(): Buttons {
+            return Buttons()
+        }
     }
 }
